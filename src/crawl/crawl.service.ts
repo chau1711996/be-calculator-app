@@ -10,7 +10,10 @@ export class CrawlService {
   private readonly crawlDataRepository: Repository<CrawlData>;
 
   async crawlData(url: string): Promise<CrawlData> {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      executablePath: '/usr/bin/chromium-browser',
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
     await page.goto(url);
 
@@ -23,5 +26,9 @@ export class CrawlService {
     crawlData.title = title;
 
     return this.crawlDataRepository.save(crawlData);
+  }
+
+  async getAll(): Promise<CrawlData[]> {
+    return this.crawlDataRepository.find();
   }
 }

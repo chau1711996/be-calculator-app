@@ -1,12 +1,13 @@
 services:
   db:
     image: postgres:13
+    restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: crawl_db
     ports:
-      - '5432:5432'
+      - '6000:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -17,11 +18,10 @@ services:
     depends_on:
       - db
     environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USERNAME: postgres
-      DB_PASSWORD: postgres
-      DB_DATABASE: crawl_db
-
+      DATABASE_URL: postgres://postgres:password@db:6000/crawl_db
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: bash -c "npm run start:dev" # Sử dụng bash để chạy lệnh
 volumes:
   postgres_data:

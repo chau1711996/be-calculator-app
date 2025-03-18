@@ -9,4 +9,9 @@ export class CrawlController {
   async crawl(@Query('url') url: string) {
     return this.crawlService.crawlData(url);
   }
+
+  @Get('all')
+  async getAll() {
+    return this.crawlService.getAll();
+  }
 }
